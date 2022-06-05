@@ -8,21 +8,23 @@ import (
 )
 
 type Server struct {
-	userController    *controllers.UserController
-	photoController   *controllers.PhotoController
-	commentController *controllers.CommentController
+	userController        *controllers.UserController
+	photoController       *controllers.PhotoController
+	commentController     *controllers.CommentController
+	socialMediaController *controllers.SocialMediaController
 }
 
-func NewServer(user *controllers.UserController, photo *controllers.PhotoController, comment *controllers.CommentController) *Server {
+func NewServer(user *controllers.UserController, photo *controllers.PhotoController, comment *controllers.CommentController, socialmedia *controllers.SocialMediaController) *Server {
 	return &Server{
-		userController:    user,
-		photoController:   photo,
-		commentController: comment,
+		userController:        user,
+		photoController:       photo,
+		commentController:     comment,
+		socialMediaController: socialmedia,
 	}
 }
 
 func (s *Server) StartServer() {
-	port := "8080"
+	port := ":8080"
 
 	router := gin.Default()
 
@@ -40,6 +42,11 @@ func (s *Server) StartServer() {
 	router.GET("/comments", s.commentController.GetAllComments)
 	router.PUT("/comments/:commentID", s.commentController.UpdateComment)
 	router.DELETE("/comments/:commentID", s.commentController.DeleteComment)
+
+	router.POST("/socialmedias", s.socialMediaController.CreateSocialMedia)
+	router.GET("/socialmedias", s.socialMediaController.GetAllSocialMedias)
+	router.PUT("/socialmedias/:socialmediaID", s.socialMediaController.UpdateSocialMedia)
+	router.DELETE("/socialmedias/:socialmediaID", s.socialMediaController.DeleteSocialMedia)
 
 	log.Println("Server running at port", port)
 

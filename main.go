@@ -2,18 +2,40 @@ package main
 
 import (
 	"go-mygram/database"
-	"log"
-
-	"github.com/gin-gonic/gin"
+	"go-mygram/repositories"
+	"go-mygram/server"
+	"go-mygram/server/controllers"
+	"go-mygram/services"
 )
 
 func main() {
-	port := ":8080"
 
-	router := gin.Default()
+	// TODO : buat middleware
+	db := database.ConnectDB()
+	userRepo := repositories.NewUserRepo(db)
+	userService := services.NewUserService(userRepo)
+	userController := controllers.NewUserController(userService)
 
-	log.Println("Server running at port", port)
+	photoRepo := repositories.NewPhotoRepo(db)
+	photoService := services.NewPhotoService(photoRepo)
+	photoController := controllers.NewPhotoController(photoService)
 
-	database.ConnectDB()
-	router.Run(port)
+	commentRepo := repositories.NewCommentRepo(db)
+	commentService := services.NewCommentService(commentRepo)
+	commentController := controllers.NewCommentController(commentService)
+
+	socialMediaRepo := repositories.NewMediaSocialRepo(db)
+	socialMediaService := services.NewSocialMediaService(socialMediaRepo)
+	socialMediaController := controllers.NewSocialMediaController(socialMediaService)
+
+	s := server.NewServer(userController, photoController, commentController, socialMediaController)
+	s.StartServer()
+	// port := ":8080"
+
+	// router := gin.Default()
+
+	// log.Println("Server running at port", port)
+
+	// database.ConnectDB()
+	// router.Run(port)
 }
