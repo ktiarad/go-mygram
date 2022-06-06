@@ -1,6 +1,7 @@
 package services
 
 import (
+	"go-mygram/helpers"
 	"go-mygram/models"
 	"go-mygram/params"
 	"go-mygram/repositories"
@@ -47,7 +48,7 @@ func (u *UserServices) Login(req *params.UserLogin) *params.Response {
 		Password: req.Password,
 	}
 
-	isOk, err := u.UserRepo.CheckUser(user)
+	userDb, err := u.UserRepo.CheckUser(user) // Check data from database
 
 	if err != nil {
 		return &params.Response{
@@ -57,17 +58,35 @@ func (u *UserServices) Login(req *params.UserLogin) *params.Response {
 		}
 	}
 
+	password := ""
+	password = user.Password
+
+	comparePass := helpers.ComparePass([]byte(userDb.Password), []byte(password))
+	if !comparePass {
+		return &params.Response{
+			Status: http.StatusUnauthorized,
+			Error:  "Invalid email/password",
+		}
+	}
+
+	token, err := helpers.GenerateToken(userDb.Email, userDb.Username)
+
+	if err != nil {
+		return &params.Response{
+			Status: http.StatusInternalServerError,
+			Error:  "INTERNAL SERVER ERROR, when generate token",
+		}
+	}
+
 	return &params.Response{
 		Status:  http.StatusOK,
 		Message: "LOGIN SUCCESS",
-		Payload: isOk, // TODO : return payload token
+		Payload: token, // TODO : return payload token
 	}
 
 }
 
 func (u *UserServices) UpdateUser(req *params.UserUpdate, id int) *params.Response {
-	// TODO : headers Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
 
 	var user = &models.User{
 		Email:    req.Email,

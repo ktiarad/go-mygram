@@ -8,8 +8,9 @@ import (
 
 type UserRepo interface {
 	CreateUser(request *models.User) (int, error)
-	CheckUser(request *models.User) (bool, error)
+	CheckUser(request *models.User) (*models.User, error)
 	UpdateUser(request *models.User, id int) error
+	GetUserById(id int) error
 	DeleteUser(id int) error
 }
 
@@ -24,8 +25,6 @@ func NewUserRepo(db *gorm.DB) UserRepo {
 }
 
 func (u *userRepo) CreateUser(request *models.User) (int, error) {
-	// TODO : hashing password dengan bycript
-	// TODO : buat Hook
 	result := u.db.Create(request)
 	err := result.Error
 	id := request.ID
@@ -33,32 +32,36 @@ func (u *userRepo) CreateUser(request *models.User) (int, error) {
 	return id, err
 }
 
-func (u *userRepo) CheckUser(request *models.User) (bool, error) {
-	// TODO : cek password dengan bycript
+func (u *userRepo) CheckUser(request *models.User) (*models.User, error) {
 	var user models.User
 
-	result := u.db.Where("email=?", request.Email).Where("password", request.Password).Find(&user)
+	result := u.db.Where("email=?", request.Email).First(&user)
 	err := result.Error
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	if &user == nil {
-		return false, err
-	}
-
-	return true, nil
+	return &user, nil
 }
 
 func (u *userRepo) UpdateUser(request *models.User, id int) error {
-	// TODO : autentikasi dengan JWT
 	var user models.User
 
 	result := u.db.Model(&user).Where("id=?", id).Updates(models.User{
 		Email:    request.Email,
 		Username: request.Username,
 	})
+	err := result.Error
+
+	return err
+}
+
+func (u *userRepo) GetUserById(id int) error {
+	var user models.User
+
+	result := u.db.First("id=?", id, &user)
+
 	err := result.Error
 
 	return err
