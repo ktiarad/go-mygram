@@ -69,7 +69,7 @@ func (u *UserServices) Login(req *params.UserLogin) *params.Response {
 		}
 	}
 
-	token, err := helpers.GenerateToken(userDb.Email, userDb.Username)
+	token, err := helpers.GenerateToken(userDb.Email, userDb.ID)
 
 	if err != nil {
 		return &params.Response{

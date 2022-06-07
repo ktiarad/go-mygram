@@ -12,6 +12,7 @@ type UserRepo interface {
 	UpdateUser(request *models.User, id int) error
 	GetUserById(id int) error
 	DeleteUser(id int) error
+	GetUserIdByEmail(email string) (int, error)
 }
 
 type userRepo struct {
@@ -68,11 +69,21 @@ func (u *userRepo) GetUserById(id int) error {
 }
 
 func (u *userRepo) DeleteUser(id int) error {
-	// TODO : autentikasi dengan JWT
 	var user models.User
 
 	result := u.db.Model(&user).Where("id=?", id).Delete(&user)
 	err := result.Error
 
 	return err
+}
+
+func (u *userRepo) GetUserIdByEmail(email string) (int, error) {
+	var user models.User
+
+	result := u.db.First("email=?", email, &user)
+
+	err := result.Error
+
+	return user.ID, err
+
 }

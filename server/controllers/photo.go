@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,6 +34,11 @@ func (p *PhotoController) CreatePhoto(ctx *gin.Context) {
 
 		params.WriteJsonResponse(ctx.Writer, &response)
 	}
+
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := int(userData["userID"].(float64))
+
+	req.UserID = userID
 
 	response := p.photoService.CreatePhoto(&req)
 

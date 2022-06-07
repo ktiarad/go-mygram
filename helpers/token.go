@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"log"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
@@ -10,10 +11,20 @@ import (
 
 const SECRET_KEY = "jwt token"
 
-func GenerateToken(email string, username string) (string, error) {
+func GenerateToken(email string, userID int) (string, error) {
+
+	// db := database.ConnectDB()
+	// userRepo := repositories.NewUserRepo(db)
+	// userID, err := userRepo.GetUserIdByEmail(email)
+
+	// if err != nil {
+	// 	return "", err
+	// }
+
 	claims := jwt.MapClaims{
-		"email":    email,
-		"username": username,
+		"userID": userID,
+		"email":  email,
+		// "username": username,
 	}
 
 	parseToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -27,6 +38,7 @@ func GenerateToken(email string, username string) (string, error) {
 }
 
 func VerifyToken(c *gin.Context) (interface{}, error) {
+	log.Default().Println("Verify token...")
 	errResponse := errors.New("Sign in to proceed")
 	headerToken := c.Request.Header.Get("Authorization")
 	bearer := strings.HasPrefix(headerToken, "Bearer")

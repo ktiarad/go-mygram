@@ -5,8 +5,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GetContentType(c *gin.Context) string {
-	return c.Request.Header.Get("Content-Type")
+func GetContentType(ctx *gin.Context) string {
+	return ctx.Request.Header.Get("Content-Type")
 }
 
 func HashPass(p string) string {

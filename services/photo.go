@@ -25,6 +25,7 @@ func (p *PhotoServices) CreatePhoto(req *params.PhotoCreate) *params.Response {
 		Title:    req.Title,
 		Caption:  req.Caption,
 		PhotoUrl: req.PhotoUrl,
+		UserID:   req.UserID,
 	}
 
 	id, err := p.PhotoRepo.CreatePhoto(photo)

@@ -59,3 +59,16 @@ func UserAuthorization() gin.HandlerFunc {
 
 	}
 }
+
+func Authorization() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.Request.Header.Get("Authorization")
+		if token == "" {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"eror":            "UNAUTHORIZED",
+				"additional_info": "Token not found",
+			})
+		}
+
+	}
+}

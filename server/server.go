@@ -34,7 +34,7 @@ func (s *Server) StartServer() {
 		userRouter.POST("/register", s.userController.Register)
 		userRouter.POST("/login", s.userController.Login)
 		userRouter.PUT("/:userID", middlewares.Authentication(), middlewares.UserAuthorization(), s.userController.UpdateUser)
-		userRouter.DELETE("/:userID", s.userController.DeleteUser)
+		userRouter.DELETE("/:userID", middlewares.Authentication(), middlewares.UserAuthorization(), s.userController.DeleteUser)
 	}
 	// router.POST("/users/register", s.userController.Register)
 	// router.POST("/users/login", s.userController.Login)
@@ -43,6 +43,7 @@ func (s *Server) StartServer() {
 
 	photoRouter := router.Group("/photos")
 	{
+		photoRouter.Use(middlewares.Authentication())
 		photoRouter.POST("/", s.photoController.CreatePhoto)
 		photoRouter.GET("/", s.photoController.GetAllPhotos)
 		photoRouter.PUT("/:userID", s.photoController.UpdatePhoto)
