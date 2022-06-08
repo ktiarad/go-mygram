@@ -18,11 +18,10 @@ func NewCommentService(CommentRepo repositories.CommentRepo) *CommentServices {
 }
 
 func (c *CommentServices) CreateComment(req *params.CommentCreate) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
 	var comment = &models.Comment{
 		Message: req.Message,
 		PhotoID: req.PhotoID,
+		UserID:  req.UserID,
 	}
 
 	id, err := c.CommentRepo.CreateComment(comment)
@@ -50,11 +49,8 @@ func (c *CommentServices) CreateComment(req *params.CommentCreate) *params.Respo
 
 }
 
-func (c *CommentServices) GetAllComments() *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-
-	comments, err := c.CommentRepo.GetAllComments()
+func (c *CommentServices) GetAllComments(id int) *params.Response {
+	comments, err := c.CommentRepo.GetAllComments(id)
 
 	if err != nil {
 		return &params.Response{
@@ -66,14 +62,11 @@ func (c *CommentServices) GetAllComments() *params.Response {
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: comments,
+		Payload: comments, // TODO : payload berisi data User dan Photo, dilakukan join
 	}
 }
 
 func (c *CommentServices) UpdateComment(req *params.CommentUpdate, id int) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-	// TODO : update hanya bisa dilakukan oleh user yang bersangkutan
 
 	var comment = &models.Comment{
 		Message: req.Message,
@@ -101,14 +94,11 @@ func (c *CommentServices) UpdateComment(req *params.CommentUpdate, id int) *para
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: &updatedData, // updatedData terdiri dari : id, title, caption, photo_url, user_id, updated_at (yang merupakan models.Photo)
+		Payload: &updatedData, // TODO : updatedData terdiri dari : id, title, caption, photo_url, user_id, updated_at (yang merupakan models.Photo)
 	}
 }
 
 func (c *CommentServices) DeleteComment(id int) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-	// TODO : delete hanya bisa dilakukan oleh user yang bersangkutan
 	err := c.CommentRepo.DeleteComment(id)
 
 	if err != nil {

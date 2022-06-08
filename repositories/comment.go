@@ -8,7 +8,7 @@ import (
 
 type CommentRepo interface {
 	CreateComment(request *models.Comment) (int, error)
-	GetAllComments() (*[]models.Comment, error)
+	GetAllComments(id int) (*[]models.Comment, error)
 	GetCommentById(id int) (*models.Comment, error)
 	UpdateComment(request *models.Comment, id int) error
 	DeleteComment(id int) error
@@ -32,19 +32,21 @@ func (c *commentRepo) CreateComment(request *models.Comment) (int, error) {
 	return id, err
 }
 
-func (c *commentRepo) GetAllComments() (*[]models.Comment, error) {
-	var comment []models.Comment
+func (c *commentRepo) GetAllComments(id int) (*[]models.Comment, error) {
+	var comments []models.Comment
 
-	result := c.db.Preload("Comments").Find(&comment)
+	// result := c.db.Preload("Comments").Find(&comment)
+	result := c.db.Where("user_id=?", id).Find(&comments)
 	err := result.Error
 
-	return &comment, err
+	return &comments, err
 }
 
 func (c *commentRepo) GetCommentById(id int) (*models.Comment, error) {
 	var comment models.Comment
 
-	result := c.db.First("id=?", id, &comment)
+	// result := c.db.First("id=?", id, &comment)
+	result := c.db.First(&comment, "id=?", id)
 	err := result.Error
 
 	return &comment, err

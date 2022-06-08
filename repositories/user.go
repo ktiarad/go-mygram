@@ -61,7 +61,7 @@ func (u *userRepo) UpdateUser(request *models.User, id int) error {
 func (u *userRepo) GetUserById(id int) error {
 	var user models.User
 
-	result := u.db.First("id=?", id, &user)
+	result := u.db.First(&user, "id=?", id)
 
 	err := result.Error
 
@@ -80,7 +80,7 @@ func (u *userRepo) DeleteUser(id int) error {
 func (u *userRepo) GetUserIdByEmail(email string) (int, error) {
 	var user models.User
 
-	result := u.db.First("email=?", email, &user)
+	result := u.db.First(&user, "email=?", email)
 
 	err := result.Error
 

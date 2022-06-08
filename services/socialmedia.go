@@ -18,11 +18,10 @@ func NewSocialMediaService(SocialMediaRepo repositories.SocialMediaRepo) *Social
 }
 
 func (s *SocialMediaServices) CreateSocialMedia(req *params.SocialMediaCreate) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
 	var socialmedia = &models.SocialMedia{
 		Name:           req.Name,
-		SocialMediaUrl: req.SocialMedia,
+		SocialMediaUrl: req.SocialMediaUrl,
+		UserID:         req.UserID,
 	}
 
 	id, err := s.SocialMediaRepo.CreateSocialMedia(socialmedia)
@@ -59,10 +58,8 @@ func (s *SocialMediaServices) CreateSocialMedia(req *params.SocialMediaCreate) *
 	}
 }
 
-func (s *SocialMediaServices) GetAllSocialMedias() *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-	socialmedias, err := s.SocialMediaRepo.GetAllSocialMedias()
+func (s *SocialMediaServices) GetAllSocialMedias(id int) *params.Response {
+	socialmedias, err := s.SocialMediaRepo.GetAllSocialMedias(id)
 
 	if err != nil {
 		return &params.Response{
@@ -79,13 +76,9 @@ func (s *SocialMediaServices) GetAllSocialMedias() *params.Response {
 }
 
 func (s *SocialMediaServices) UpdateSocialMedia(req *params.SocialMediaCreate, id int) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-	// TODO : update hanya boleh dilakukan oleh user yang bersangkutan
-
 	var socialmedia = &models.SocialMedia{
 		Name:           req.Name,
-		SocialMediaUrl: req.SocialMedia,
+		SocialMediaUrl: req.SocialMediaUrl,
 	}
 
 	err := s.SocialMediaRepo.UpdateSocialMedia(socialmedia, id)
@@ -115,10 +108,6 @@ func (s *SocialMediaServices) UpdateSocialMedia(req *params.SocialMediaCreate, i
 }
 
 func (s *SocialMediaServices) DeleteSocialMedia(id int) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-	// TODO : update hanya boleh dilakukan oleh user yang bersangkutan
-
 	err := s.SocialMediaRepo.DeleteSocialMedia(id)
 	if err != nil {
 		return &params.Response{

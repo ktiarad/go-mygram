@@ -9,7 +9,7 @@ import (
 type SocialMediaRepo interface {
 	CreateSocialMedia(request *models.SocialMedia) (int, error)
 	GetSocialMediaById(id int) (*models.SocialMedia, error)
-	GetAllSocialMedias() (*[]models.SocialMedia, error)
+	GetAllSocialMedias(id int) (*[]models.SocialMedia, error)
 	UpdateSocialMedia(request *models.SocialMedia, id int) error
 	DeleteSocialMedia(id int) error
 }
@@ -36,16 +36,16 @@ func (s *socialMediaRepo) CreateSocialMedia(request *models.SocialMedia) (int, e
 func (s *socialMediaRepo) GetSocialMediaById(id int) (*models.SocialMedia, error) {
 	var socialmedia models.SocialMedia
 
-	result := s.db.First("id=?", id, &socialmedia)
+	result := s.db.First(&socialmedia, "id=?", id)
 	err := result.Error
 
 	return &socialmedia, err
 }
 
-func (s *socialMediaRepo) GetAllSocialMedias() (*[]models.SocialMedia, error) {
+func (s *socialMediaRepo) GetAllSocialMedias(id int) (*[]models.SocialMedia, error) {
 	var socialmedias []models.SocialMedia
 
-	result := s.db.Preload("SocialMedias").Find(&socialmedias)
+	result := s.db.Model(&socialmedias).Where("user_id=?", id).Find(&socialmedias)
 	err := result.Error
 
 	return &socialmedias, err

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,13 +35,21 @@ func (c *CommentController) CreateComment(ctx *gin.Context) {
 		params.WriteJsonResponse(ctx.Writer, &response)
 	}
 
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := int(userData["userID"].(float64))
+
+	comment.UserID = userID
+
 	response := c.commentService.CreateComment(&comment)
 
 	params.WriteJsonResponse(ctx.Writer, response)
 }
 
 func (c *CommentController) GetAllComments(ctx *gin.Context) {
-	response := c.commentService.GetAllComments()
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := int(userData["userID"].(float64))
+
+	response := c.commentService.GetAllComments(userID)
 
 	params.WriteJsonResponse(ctx.Writer, response)
 }

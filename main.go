@@ -10,7 +10,6 @@ import (
 
 func main() {
 
-	// TODO : buat middleware
 	db := database.ConnectDB()
 	userRepo := repositories.NewUserRepo(db)
 	userService := services.NewUserService(userRepo)
@@ -30,12 +29,4 @@ func main() {
 
 	s := server.NewServer(userController, photoController, commentController, socialMediaController)
 	s.StartServer()
-	// port := ":8080"
-
-	// router := gin.Default()
-
-	// log.Println("Server running at port", port)
-
-	// database.ConnectDB()
-	// router.Run(port)
 }

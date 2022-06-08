@@ -46,7 +46,10 @@ func (p *PhotoController) CreatePhoto(ctx *gin.Context) {
 }
 
 func (p *PhotoController) GetAllPhotos(ctx *gin.Context) {
-	response := p.photoService.GetAllPhotos()
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := int(userData["userID"].(float64))
+
+	response := p.photoService.GetAllPhotos(userID)
 
 	params.WriteJsonResponse(ctx.Writer, response)
 }

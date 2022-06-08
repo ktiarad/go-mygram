@@ -12,19 +12,9 @@ import (
 const SECRET_KEY = "jwt token"
 
 func GenerateToken(email string, userID int) (string, error) {
-
-	// db := database.ConnectDB()
-	// userRepo := repositories.NewUserRepo(db)
-	// userID, err := userRepo.GetUserIdByEmail(email)
-
-	// if err != nil {
-	// 	return "", err
-	// }
-
 	claims := jwt.MapClaims{
 		"userID": userID,
 		"email":  email,
-		// "username": username,
 	}
 
 	parseToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

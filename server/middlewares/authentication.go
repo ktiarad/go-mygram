@@ -17,25 +17,11 @@ func Authentication() gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error":           "UNAUTHENTICATED",
 				"additional_info": err.Error(),
-				// })
-				// return &params.Response{
-				// 	Status:         http.StatusUnauthorized,
-				// 	Error:          "UNAUTHENTICATED",
-				// 	AdditionalInfo: err.Error(),
-				// }
 			})
 		}
 
 		ctx.Set("userData", verifyToken)
 		ctx.Next()
-		// return func(c *gin.Context) {
-		// 	verifyToken, err := helpers.VerifyToken(c)
-		// 	_ = verifyToken
-
-		// 	if err != nil {
-
-		// 	}
-		// }
 	}
 
 }

@@ -3,7 +3,6 @@ package models
 import "time"
 
 type Comment struct {
-	// GormModel
 	ID        int `gorm:"primaryKey;unique" json:"id"`
 	UserID    int
 	PhotoID   int
@@ -11,3 +10,5 @@ type Comment struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+// TODO : buat Hooks BeforeCreate

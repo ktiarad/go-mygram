@@ -111,9 +111,6 @@ func (u *UserServices) UpdateUser(req *params.UserUpdate, id int) *params.Respon
 }
 
 func (u *UserServices) DeleteUser(id int) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-
 	err := u.UserRepo.DeleteUser(id)
 
 	if err != nil {

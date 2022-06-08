@@ -18,9 +18,6 @@ func NewPhotoService(PhotoRepo repositories.PhotoRepo) *PhotoServices {
 }
 
 func (p *PhotoServices) CreatePhoto(req *params.PhotoCreate) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-
 	var photo = &models.Photo{
 		Title:    req.Title,
 		Caption:  req.Caption,
@@ -45,11 +42,8 @@ func (p *PhotoServices) CreatePhoto(req *params.PhotoCreate) *params.Response {
 	}
 }
 
-func (p *PhotoServices) GetAllPhotos() *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-
-	photos, err := p.PhotoRepo.GetAllPhotos()
+func (p *PhotoServices) GetAllPhotos(id int) *params.Response {
+	photos, err := p.PhotoRepo.GetAllPhotos(id)
 
 	if err != nil {
 		return &params.Response{
@@ -68,10 +62,6 @@ func (p *PhotoServices) GetAllPhotos() *params.Response {
 }
 
 func (p *PhotoServices) UpdatePhoto(req *params.PhotoCreate, id int) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-	// TODO : update hanya bisa dilakukan oleh user yang bersangkutan
-
 	var photo = &models.Photo{
 		Title:    req.Title,
 		Caption:  req.Caption,
@@ -115,10 +105,6 @@ func (p *PhotoServices) UpdatePhoto(req *params.PhotoCreate, id int) *params.Res
 }
 
 func (p *PhotoServices) DeletePhoto(id int) *params.Response {
-	// TODO : header Authorization (Bearer token string)
-	// TODO : autentikasi dengan JWT
-	// TODO : delete hanya bisa dilakukan oleh user yang bersangkutan
-
 	err := p.PhotoRepo.DeletePhoto(id)
 	if err != nil {
 		return &params.Response{

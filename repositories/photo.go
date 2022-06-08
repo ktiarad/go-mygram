@@ -8,7 +8,7 @@ import (
 
 type PhotoRepo interface {
 	CreatePhoto(request *models.Photo) (int, error)
-	GetAllPhotos() (*[]models.Photo, error)
+	GetAllPhotos(id int) (*[]models.Photo, error)
 	UpdatePhoto(request *models.Photo, id int) error
 	GetPhotoById(id int) (*models.Photo, error)
 	DeletePhoto(id int) error
@@ -32,11 +32,11 @@ func (p *photoRepo) CreatePhoto(request *models.Photo) (int, error) {
 	return id, err
 }
 
-func (p *photoRepo) GetAllPhotos() (*[]models.Photo, error) {
+func (p *photoRepo) GetAllPhotos(id int) (*[]models.Photo, error) {
 	var photos []models.Photo
 
 	// TODO : get all photo bersama dengan get User
-	result := p.db.Preload("Photos").Find(&photos)
+	result := p.db.Model(&photos).Where("user_id=?", id).Find(&photos)
 	err := result.Error
 
 	return &photos, err
@@ -53,7 +53,7 @@ func (p *photoRepo) GetPhotoById(id int) (*models.Photo, error) {
 }
 
 func (p *photoRepo) UpdatePhoto(request *models.Photo, id int) error {
-	var photo []models.Photo
+	var photo models.Photo
 
 	result := p.db.Model(&photo).Where("id=?", id).Updates(models.Photo{
 		Title:    request.Title,

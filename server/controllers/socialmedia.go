@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,19 +34,27 @@ func (s *SocialMediaController) CreateSocialMedia(ctx *gin.Context) {
 		params.WriteJsonResponse(ctx.Writer, &response)
 	}
 
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := int(userData["userID"].(float64))
+
+	socialmedia.UserID = userID
+
 	response := s.socialMediaServices.CreateSocialMedia(&socialmedia)
 	params.WriteJsonResponse(ctx.Writer, response)
 }
 
 func (s *SocialMediaController) GetAllSocialMedias(ctx *gin.Context) {
-	response := s.socialMediaServices.GetAllSocialMedias()
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := int(userData["userID"].(float64))
+
+	response := s.socialMediaServices.GetAllSocialMedias(userID)
 	params.WriteJsonResponse(ctx.Writer, response)
 }
 
 func (s *SocialMediaController) UpdateSocialMedia(ctx *gin.Context) {
 	var socialmedia params.SocialMediaCreate
 
-	err := ctx.BindJSON(socialmedia)
+	err := ctx.BindJSON(&socialmedia)
 
 	if err != nil {
 		response := &params.Response{
@@ -57,7 +66,7 @@ func (s *SocialMediaController) UpdateSocialMedia(ctx *gin.Context) {
 		params.WriteJsonResponse(ctx.Writer, response)
 	}
 
-	socialmediaId := ctx.Param("socialmediaID")
+	socialmediaId := ctx.Param("socialMediaId")
 	id, err := strconv.Atoi(socialmediaId)
 
 	response := s.socialMediaServices.UpdateSocialMedia(&socialmedia, id)
@@ -65,7 +74,7 @@ func (s *SocialMediaController) UpdateSocialMedia(ctx *gin.Context) {
 }
 
 func (s *SocialMediaController) DeleteSocialMedia(ctx *gin.Context) {
-	socialmediaID := ctx.Param("socialmediaID")
+	socialmediaID := ctx.Param("socialMediaId")
 	id, err := strconv.Atoi(socialmediaID)
 
 	if err != nil {

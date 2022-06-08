@@ -1,6 +1,7 @@
 package params
 
 type SocialMediaCreate struct {
-	Name        string `json:"name"`
-	SocialMedia string `json:"social_media"`
+	Name           string `json:"name"`
+	SocialMediaUrl string `json:"social_media_url"`
+	UserID         int    `json:"user_id"`
 }

@@ -36,44 +36,33 @@ func (s *Server) StartServer() {
 		userRouter.PUT("/:userID", middlewares.Authentication(), middlewares.UserAuthorization(), s.userController.UpdateUser)
 		userRouter.DELETE("/:userID", middlewares.Authentication(), middlewares.UserAuthorization(), s.userController.DeleteUser)
 	}
-	// router.POST("/users/register", s.userController.Register)
-	// router.POST("/users/login", s.userController.Login)
-	// router.PUT("/users/:userID", s.userController.UpdateUser)
-	// router.DELETE("/users/:userID", s.userController.DeleteUser)
 
 	photoRouter := router.Group("/photos")
 	{
 		photoRouter.Use(middlewares.Authentication())
 		photoRouter.POST("/", s.photoController.CreatePhoto)
 		photoRouter.GET("/", s.photoController.GetAllPhotos)
-		photoRouter.PUT("/:userID", s.photoController.UpdatePhoto)
-		photoRouter.DELETE("/:userID", s.photoController.DeletePhoto)
+		photoRouter.PUT("/:photoID", middlewares.PhotoAuthorization(), s.photoController.UpdatePhoto)
+		photoRouter.DELETE("/:photoID", middlewares.PhotoAuthorization(), s.photoController.DeletePhoto)
 	}
 
 	commentRouter := router.Group("/comments")
 	{
+		commentRouter.Use(middlewares.Authentication())
 		commentRouter.POST("/", s.commentController.CreateComment)
 		commentRouter.GET("/", s.commentController.GetAllComments)
-		commentRouter.PUT("/:commentID", s.commentController.UpdateComment)
-		commentRouter.DELETE("/:commentID", s.commentController.DeleteComment)
+		commentRouter.PUT("/:commentID", middlewares.CommentAuthorization(), s.commentController.UpdateComment)
+		commentRouter.DELETE("/:commentID", middlewares.CommentAuthorization(), s.commentController.DeleteComment)
 	}
-
-	// router.POST("/comments", s.commentController.CreateComment)
-	// router.GET("/comments", s.commentController.GetAllComments)
-	// router.PUT("/comments/:commentID", s.commentController.UpdateComment)
-	// router.DELETE("/comments/:commentID", s.commentController.DeleteComment)
 
 	socialMediaRouter := router.Group("/socialmedias")
 	{
+		socialMediaRouter.Use(middlewares.Authentication())
 		socialMediaRouter.POST("/", s.socialMediaController.CreateSocialMedia)
 		socialMediaRouter.GET("/", s.socialMediaController.GetAllSocialMedias)
-		socialMediaRouter.PUT("/:socialmediaID", s.socialMediaController.UpdateSocialMedia)
-		socialMediaRouter.DELETE("/:socialmediaID", s.socialMediaController.DeleteSocialMedia)
+		socialMediaRouter.PUT("/:socialMediaId", middlewares.SocialMediaAuthorization(), s.socialMediaController.UpdateSocialMedia)
+		socialMediaRouter.DELETE("/:socialMediaId", middlewares.SocialMediaAuthorization(), s.socialMediaController.DeleteSocialMedia)
 	}
-	// router.POST("/socialmedias", s.socialMediaController.CreateSocialMedia)
-	// router.GET("/socialmedias", s.socialMediaController.GetAllSocialMedias)
-	// router.PUT("/socialmedias/:socialmediaID", s.socialMediaController.UpdateSocialMedia)
-	// router.DELETE("/socialmedias/:socialmediaID", s.socialMediaController.DeleteSocialMedia)
 
 	log.Println("Server running at port", port)
 
