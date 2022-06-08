@@ -35,7 +35,6 @@ func (c *commentRepo) CreateComment(request *models.Comment) (int, error) {
 func (c *commentRepo) GetAllComments(id int) (*[]models.Comment, error) {
 	var comments []models.Comment
 
-	// result := c.db.Preload("Comments").Find(&comment)
 	result := c.db.Where("user_id=?", id).Find(&comments)
 	err := result.Error
 
@@ -45,7 +44,6 @@ func (c *commentRepo) GetAllComments(id int) (*[]models.Comment, error) {
 func (c *commentRepo) GetCommentById(id int) (*models.Comment, error) {
 	var comment models.Comment
 
-	// result := c.db.First("id=?", id, &comment)
 	result := c.db.First(&comment, "id=?", id)
 	err := result.Error
 
