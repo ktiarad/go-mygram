@@ -35,10 +35,17 @@ func (u *UserServices) Register(req *params.UserCreate) *params.Response {
 		}
 	}
 
+	payload := map[string]interface{}{
+		"age":      req.Age,
+		"email":    req.Email,
+		"id":       id,
+		"username": req.Username,
+	}
+
 	return &params.Response{
 		Status:  http.StatusCreated,
 		Message: "CREATED SUCCESS",
-		Payload: id, // TODO : Payload berupa JSON berisi : age, email, id, username
+		Payload: payload,
 	}
 }
 
@@ -78,10 +85,14 @@ func (u *UserServices) Login(req *params.UserLogin) *params.Response {
 		}
 	}
 
+	payload := map[string]interface{}{
+		"token": token,
+	}
+
 	return &params.Response{
 		Status:  http.StatusOK,
 		Message: "LOGIN SUCCESS",
-		Payload: token, // TODO : return payload token
+		Payload: payload,
 	}
 
 }
@@ -103,10 +114,28 @@ func (u *UserServices) UpdateUser(req *params.UserUpdate, id int) *params.Respon
 		}
 	}
 
+	userDb, err := u.UserRepo.GetUserById(id)
+
+	if err != nil {
+		return &params.Response{
+			Status:         http.StatusNotFound,
+			Error:          "NOT FOUND",
+			AdditionalInfo: err.Error(),
+		}
+	}
+
+	payload := map[string]interface{}{
+		"id":         id,
+		"email":      userDb.Email,
+		"username":   userDb.Username,
+		"age":        userDb.Age,
+		"updated_at": userDb.UpdatedAt,
+	}
+
 	return &params.Response{
 		Status:  http.StatusOK,
 		Message: "UPDATE SUCCESS",
-		Payload: id, // TODO : payload berupa id, email, username, age, updated_at
+		Payload: payload, // TODO : payload berupa id, email, username, age, updated_at
 	}
 }
 

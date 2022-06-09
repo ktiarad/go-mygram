@@ -1,5 +1,10 @@
 package models
 
+import (
+	"github.com/asaskevich/govalidator"
+	"gorm.io/gorm"
+)
+
 type SocialMedia struct {
 	ID             int    `gorm:"primaryKey;unique" json:"id"`
 	Name           string `gorm:"not null" json:"name" form:"name" valid:"required~Name is required"`
@@ -7,4 +12,22 @@ type SocialMedia struct {
 	UserID         int    `json:"user_id"`
 }
 
-// TODO : Buat hooks BeforeCreate
+func (s *SocialMedia) BeforeCreate(tx *gorm.DB) error {
+	_, errCreate := govalidator.ValidateStruct(s)
+
+	if errCreate != nil {
+		return errCreate
+	}
+
+	return nil
+}
+
+// func (s *SocialMedia) BeforeUpdate(tx *gorm.DB) error {
+// 	_, errCreate := govalidator.ValidateStruct(s)
+
+// 	if errCreate != nil {
+// 		return errCreate
+// 	}
+
+// 	return nil
+// }

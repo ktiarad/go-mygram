@@ -8,9 +8,9 @@ import (
 type Response struct {
 	Status         int         `json:"status"`
 	Error          string      `json:"error,omitempty"`
-	Payload        interface{} `json:"payload,omitempty"`
 	Message        string      `json:"message,omitempty"`
 	AdditionalInfo interface{} `json:"additional_info,omitempty"`
+	Payload        interface{} `json:"payload,omitempty"`
 }
 
 func WriteJsonResponse(rw http.ResponseWriter, payload *Response) {

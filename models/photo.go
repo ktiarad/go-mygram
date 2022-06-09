@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/asaskevich/govalidator"
+	"gorm.io/gorm"
+)
 
 type Photo struct {
 	ID        int       `gorm:"primaryKey;unique" json:"id"`
@@ -14,4 +19,22 @@ type Photo struct {
 	Comment *[]Comment
 }
 
-// TODO : buat hooks BeforeCreate
+func (p *Photo) BeforeCreate(tx *gorm.DB) error {
+	_, errCreate := govalidator.ValidateStruct(p)
+
+	if errCreate != nil {
+		return errCreate
+	}
+
+	return nil
+}
+
+// func (p *Photo) BeforeUpdate(tx *gorm.DB) error {
+// 	_, errCreate := govalidator.ValidateStruct(p)
+
+// 	if errCreate != nil {
+// 		return errCreate
+// 	}
+
+// 	return nil
+// }

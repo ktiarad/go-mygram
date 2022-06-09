@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/asaskevich/govalidator"
+	"gorm.io/gorm"
+)
 
 type Comment struct {
 	ID        int `gorm:"primaryKey;unique" json:"id"`
@@ -11,4 +16,22 @@ type Comment struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// TODO : buat Hooks BeforeCreate
+func (c *Comment) BeforeCreate(tx *gorm.DB) error {
+	_, errCreate := govalidator.ValidateStruct(c)
+
+	if errCreate != nil {
+		return errCreate
+	}
+
+	return nil
+}
+
+// func (c *Comment) BeforeUpdate(tx *gorm.DB) error {
+// 	_, errCreate := govalidator.ValidateStruct(c)
+
+// 	if errCreate != nil {
+// 		return errCreate
+// 	}
+
+// 	return nil
+// }

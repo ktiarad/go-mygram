@@ -10,7 +10,7 @@ type UserRepo interface {
 	CreateUser(request *models.User) (int, error)
 	CheckUser(request *models.User) (*models.User, error)
 	UpdateUser(request *models.User, id int) error
-	GetUserById(id int) error
+	GetUserById(id int) (*models.User, error)
 	DeleteUser(id int) error
 	GetUserIdByEmail(email string) (int, error)
 }
@@ -58,14 +58,14 @@ func (u *userRepo) UpdateUser(request *models.User, id int) error {
 	return err
 }
 
-func (u *userRepo) GetUserById(id int) error {
+func (u *userRepo) GetUserById(id int) (*models.User, error) {
 	var user models.User
 
 	result := u.db.First(&user, "id=?", id)
 
 	err := result.Error
 
-	return err
+	return &user, err
 }
 
 func (u *userRepo) DeleteUser(id int) error {

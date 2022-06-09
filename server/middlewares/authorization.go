@@ -29,7 +29,7 @@ func UserAuthorization() gin.HandlerFunc {
 		userData := ctx.MustGet("userData").(jwt.MapClaims)
 		userId := int(userData["id"].(int))
 
-		err = userRepo.GetUserById(userId)
+		_, err = userRepo.GetUserById(userId)
 
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
