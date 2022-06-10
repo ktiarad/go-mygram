@@ -27,7 +27,8 @@ func UserAuthorization() gin.HandlerFunc {
 		}
 
 		userData := ctx.MustGet("userData").(jwt.MapClaims)
-		userId := int(userData["id"].(int))
+		userId := int(userData["userID"].(float64))
+		log.Default().Println("userID:", userId)
 
 		_, err = userRepo.GetUserById(userId)
 
@@ -36,9 +37,8 @@ func UserAuthorization() gin.HandlerFunc {
 				"error":           "NOT FOUND",
 				"additional_info": err.Error(),
 			})
+			return
 		}
-
-		log.Default().Println("id user : ", userId)
 
 		if userIdParam != userId {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -77,11 +77,10 @@ func PhotoAuthorization() gin.HandlerFunc {
 				"error":           "NOT FOUND",
 				"additional_info": err.Error(),
 			})
+			return
 		}
 
 		photoUserId := photo.UserID
-
-		log.Default().Println("id user : ", userId)
 
 		if photoUserId != userId {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -119,11 +118,10 @@ func CommentAuthorization() gin.HandlerFunc {
 				"error":           "NOT FOUND",
 				"additional_info": err.Error(),
 			})
+			return
 		}
 
 		commentUserId := comment.UserID
-
-		log.Default().Println("id user : ", userId)
 
 		if commentUserId != userId {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -157,6 +155,7 @@ func SocialMediaAuthorization() gin.HandlerFunc {
 				"error":           "NOT FOUND",
 				"additional_info": err.Error(),
 			})
+			return
 		}
 
 		socialMediaId := socialMedia.UserID

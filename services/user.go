@@ -135,7 +135,7 @@ func (u *UserServices) UpdateUser(req *params.UserUpdate, id int) *params.Respon
 	return &params.Response{
 		Status:  http.StatusOK,
 		Message: "UPDATE SUCCESS",
-		Payload: payload, // TODO : payload berupa id, email, username, age, updated_at
+		Payload: payload,
 	}
 }
 

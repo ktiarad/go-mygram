@@ -35,10 +35,29 @@ func (p *PhotoServices) CreatePhoto(req *params.PhotoCreate) *params.Response {
 		}
 	}
 
+	photoDb, err := p.PhotoRepo.GetPhotoById(id)
+
+	if err != nil {
+		return &params.Response{
+			Status:         http.StatusInternalServerError,
+			Error:          "INTERNAL SERVER ERROR, when get photo by id",
+			AdditionalInfo: err.Error(),
+		}
+	}
+
+	payload := map[string]interface{}{
+		"id":         id,
+		"title":      photoDb.Title,
+		"caption":    photoDb.Caption,
+		"photo_url":  photoDb.PhotoUrl,
+		"user_id":    photoDb.UserID,
+		"created_at": photoDb.CreatedAt,
+	}
+
 	return &params.Response{
 		Status:  http.StatusCreated,
 		Message: "CREATE PHOTO SUCCESS",
-		Payload: id, // TODO : payload berupa id, title, caption, photo_url, user_id, created_at
+		Payload: payload,
 	}
 }
 
@@ -55,8 +74,7 @@ func (p *PhotoServices) GetAllPhotos(id int) *params.Response {
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: photos, // TODO : cek payload terdiri dari []models.Photo : id, title, caption, photo_url, user_id, created_at, updated_at, User{email, username}
-
+		Payload: photos,
 	}
 
 }
@@ -78,17 +96,16 @@ func (p *PhotoServices) UpdatePhoto(req *params.PhotoCreate, id int) *params.Res
 		}
 	}
 
-	updatedData, err := p.PhotoRepo.GetPhotoById(id)
+	photoDb, err := p.PhotoRepo.GetPhotoById(id)
 
-	var updatedPhoto = models.Photo{
-		ID:        updatedData.ID,
-		Title:     updatedData.Title,
-		Caption:   updatedData.Caption,
-		PhotoUrl:  updatedData.PhotoUrl,
-		UserID:    updatedData.UserID,
-		UpdatedAt: updatedData.UpdatedAt,
+	payload := map[string]interface{}{
+		"id":         id,
+		"title":      photoDb.Title,
+		"caption":    photoDb.Caption,
+		"photo_url":  photoDb.PhotoUrl,
+		"user_id":    photoDb.UserID,
+		"updated_at": photoDb.UpdatedAt,
 	}
-
 	if err != nil {
 		return &params.Response{
 			Status:         http.StatusInternalServerError,
@@ -99,7 +116,7 @@ func (p *PhotoServices) UpdatePhoto(req *params.PhotoCreate, id int) *params.Res
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: updatedPhoto,
+		Payload: payload,
 	}
 
 }

@@ -35,8 +35,8 @@ func (p *photoRepo) CreatePhoto(request *models.Photo) (int, error) {
 func (p *photoRepo) GetAllPhotos(id int) (*[]models.Photo, error) {
 	var photos []models.Photo
 
-	// TODO : get all photo bersama dengan get User
 	result := p.db.Model(&photos).Where("user_id=?", id).Find(&photos)
+
 	err := result.Error
 
 	return &photos, err

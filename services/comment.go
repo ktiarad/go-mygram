@@ -62,7 +62,7 @@ func (c *CommentServices) GetAllComments(id int) *params.Response {
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: comments, // TODO : payload berisi data User dan Photo, dilakukan join
+		Payload: comments,
 	}
 }
 
@@ -94,7 +94,7 @@ func (c *CommentServices) UpdateComment(req *params.CommentUpdate, id int) *para
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: &updatedData, // TODO : updatedData terdiri dari : id, title, caption, photo_url, user_id, updated_at (yang merupakan models.Photo)
+		Payload: &updatedData,
 	}
 }
 
