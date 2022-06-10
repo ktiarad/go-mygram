@@ -43,18 +43,10 @@ func (s *SocialMediaServices) CreateSocialMedia(req *params.SocialMediaCreate) *
 			AdditionalInfo: err.Error(),
 		}
 	}
-	createdSocialMedia := models.SocialMedia{
-		ID:             id,
-		Name:           createdData.Name,
-		SocialMediaUrl: createdData.SocialMediaUrl,
-		UserID:         createdData.UserID,
-		// CreatedAt:      createdData.CreatedAt,
-		// TODO : add CreatedAt untuk Payload
-	}
 
 	return &params.Response{
 		Status:  http.StatusCreated,
-		Payload: createdSocialMedia,
+		Payload: createdData,
 	}
 }
 
@@ -71,7 +63,7 @@ func (s *SocialMediaServices) GetAllSocialMedias(id int) *params.Response {
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: socialmedias, // TODO : cek konten berisi :id, name, social_media_url, user_id, created_at, updated_at, User{id, username, profile_image_url}
+		Payload: socialmedias,
 	}
 }
 
@@ -103,7 +95,7 @@ func (s *SocialMediaServices) UpdateSocialMedia(req *params.SocialMediaCreate, i
 
 	return &params.Response{
 		Status:  http.StatusOK,
-		Payload: updatedData, // TODO : cek payload terdiri dari : id, name, social_media_url, user_id, updated_at
+		Payload: updatedData,
 	}
 }
 
